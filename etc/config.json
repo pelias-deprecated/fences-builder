@@ -1,0 +1,9 @@
+{
+  "inputFile": "https://s3.amazonaws.com/metro-extracts.mapzen.com/philadelphia_pennsylvania.osm.pbf",
+  "inputType": "pbf",
+  "outputFile": "./output/philadelphia_pennsylvania.geojson",
+  "filterTags": {
+    "boundary": { "administrative": true },
+    "admin_level": true
+  }
+}
