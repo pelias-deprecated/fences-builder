@@ -1,10 +1,10 @@
-# openstreetmap-boundaries
+# openstreetmap-polygons
 
 This module extracts administrative boundary polygons from openstreetmap data files.
 It's currently using [node-osmium](https://github.com/osmcode/node-osmium) to do most of the work, and simply filtering
 the generated polygons using tags.
 
-[![NPM](https://nodei.co/npm/pelias-openstreetmap-boundaries.png)](https://nodei.co/npm/pelias-openstreetmap-boundaries/)
+[![NPM](https://nodei.co/npm/pelias-openstreetmap-polygons.png)](https://nodei.co/npm/pelias-openstreetmap-polygons/)
 
 Note: you will need `node` and `npm` installed first.
 
@@ -14,7 +14,7 @@ The easiest way to install `node.js` is with [nave.sh](https://github.com/isaacs
 ## Installation
 
 ```bash
-$ npm install pelias-openstreetmap-boundaries
+$ npm install pelias-openstreetmap-polygons
 ```
 
 ## Usage
@@ -58,5 +58,5 @@ $ npm test
 
 ### Continuous Integration
 
-[![Build Status](https://travis-ci.org/pelias/openstreetmap-boundaries.svg?branch=master)](https://travis-ci.org/pelias/openstreetmap-boundaries)
+[![Build Status](https://travis-ci.org/pelias/openstreetmap-polygons.svg?branch=master)](https://travis-ci.org/pelias/openstreetmap-polygons)
 
