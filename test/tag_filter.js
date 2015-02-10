@@ -3,6 +3,41 @@ var through = require('through2');
 
 var streamFactory = require('./../src/tag_filter');
 
+describe.only('temp', function () {
+  it('should get errors', function (done) {
+    var async = require('async');
+
+    function one(value, cb) {
+      cb(null, value);
+    }
+
+    function two(value, cb) {
+      cb(new Error('oops'));
+    }
+
+    function three(value, cb) {
+      cb(null, value);
+    }
+
+
+    function wrapper(f, cb) {
+      f(function (err) {
+        cb(null, err);
+      });
+    }
+
+    async.parallel({
+      one: wrapper.bind(null, one.bind(null, 'value1')),
+      two: wrapper.bind(null, two.bind(null, 'value2')),
+      three: wrapper.bind(null, three.bind(null, 'value3'))
+    },
+    function(err, results) {
+      console.log(err, results);
+      done();
+    });
+  });
+});
+
 describe('tag_filter', function () {
 
   describe('interface', function () {
