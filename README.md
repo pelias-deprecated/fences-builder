@@ -24,12 +24,8 @@ There is config.json in the project's etc directory. You can define the followin
 ```javascript
     {
         "inputFile": "path/to/input/file",
-        "inputType": "pbf/osm or any osmium supported type" // defaults to "pbf"
-        "outputFile": "path/to/output/file" // currently geojson only
-        "filterTags": {
-            "boundary": { "administrative": true }, // accept objects where boundary == administrative
-            "admin_level": true // accept objects where admin_level == <any>
-        }
+        "outputDir": "path/to/output/file", // currently geojson only
+        "errorDump": true // will create error json file in output dir
     }
 ```
 
@@ -42,12 +38,7 @@ $ npm start
 ### Notes
 
 Currently node-osmium is being used to generate the polygons and this module simply filters them
-according to configured tags. This is proving to be relatively slow and resource intensive for
-large OSM extracts. It's important to note that the number of administrative boundary areas
-is relatively small compared to the total number of areas found in a given OSM file.
-Presumably building the polygons manually with a double-pass approach might prove to be
-more optimal for this use case.
-
+according to admin tags.
 
 ## Running Unit Tests
 

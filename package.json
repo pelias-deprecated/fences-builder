@@ -14,23 +14,22 @@
   "main": "index.js",
   "scripts": {
     "start": "time PELIAS_CONFIG=./etc/config.json node --max-old-space-size=10000 app.js",
-    "test": "./node_modules/.bin/mocha test/"
+    "test": "./node_modules/.bin/mocha -R spec test/"
   },
   "dependencies": {
     "async": "^0.9.0",
     "geojson-stream": "0.0.0",
-    "lodash": "^3.1.0",
+    "microtime": "^1.2.0",
     "osmium": "^0.3.0",
     "pbf2json": "0.0.1",
     "pelias-config": "0.0.6",
-    "through2": "^0.6.3",
     "wellknown": "^0.3.1",
     "winston": "^0.9.0"
   },
   "devDependencies": {
+    "mocha": "^2.1.0",
     "precommit-hook": "1.0.7",
-    "mocha": "*",
-    "should": "*"
+    "should": "^5.0.0"
   },
   "repository": {
     "type": "git",

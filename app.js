@@ -1,18 +1,16 @@
 var util = require('util');
-var osm_boundaries = require('./');
+var openstreetmap_polygons = require('./');
 var logger = require('./src/util/logger');
 var config = require('pelias-config').generate();
 
 logger.info(util.format(
-  'Extracting boundaries from %s file %s into %s',
-  config.inputType,
+  'Extracting admin boundaries from %s into %s (error dump: %s)',
   config.inputFile,
-  config.outputFile
+  config.outputDir,
+  config.errorDump
 ));
 
-logger.info('Filtering boundaries that match these tags: ', config.filterTags);
-
-osm_boundaries(config, function (err, results) {
+openstreetmap_polygons.extractPolygons(config, function (err, results) {
   if (err) {
     logger.error(err);
   }
