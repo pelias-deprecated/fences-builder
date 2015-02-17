@@ -24,8 +24,7 @@ There is config.json in the project's etc directory. You can define the followin
 ```javascript
     {
         "inputFile": "path/to/input/file",
-        "outputDir": "path/to/output/file", // currently geojson only
-        "errorDump": true // will create error json file in output dir
+        "outputDir": "path/to/output/directory"
     }
 ```
 
@@ -37,8 +36,8 @@ $ npm start
 
 ### Notes
 
-Currently node-osmium is being used to generate the polygons and this module simply filters them
-according to admin tags.
+Osmium parser has been separated into a child process because it doesn't respect
+node's event loop.
 
 ## Running Unit Tests
 
