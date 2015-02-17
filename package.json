@@ -1,6 +1,6 @@
 {
   "name": "pelias-openstreetmap-polygons",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Extract administrative polygons from openstreetmap data",
   "keywords": [
     "osm",
