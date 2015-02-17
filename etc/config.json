@@ -1,5 +1,4 @@
 {
   "inputFile": "https://s3.amazonaws.com/metro-extracts.mapzen.com/philadelphia_pennsylvania.osm.pbf",
-  "outputDir": "./output",
-  "errorDump": true
+  "outputDir": "./output/"
 }

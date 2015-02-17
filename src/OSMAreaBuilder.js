@@ -12,15 +12,17 @@ var logger = require('./util/logger');
  *
  * @param inputFilePath string
  * @param inputFileType string
- * @param areaHandler function(area) will be called for each valid area object
- * @param errorHandler function(err) will be called when invalid areas are encountered
+ * @param callbacks object associative array of callback functions
+ *                         Must provide area and error, filter is optional
  * @constructor
  */
-function OSMAreaBuilder(inputFilePath, inputFileType, areaHandler, errorHandler) {
+function OSMAreaBuilder(inputFilePath, inputFileType, callbacks) {
 
-  this._areaHandler = areaHandler;
-  this._errorHandler = errorHandler;
+  this._callbacks = callbacks;
 
+  if (!(this._callbacks.hasOwnProperty('area') && this._callbacks.hasOwnProperty('error'))) {
+    throw new Error('OSMAreaBuilder failed to instantiate without area and error callback functions');
+  }
 
   inputFileType = inputFileType || 'pbf';
   var fileIn = new osmium.File(inputFilePath, inputFileType);
@@ -88,6 +90,7 @@ OSMAreaBuilder.prototype._resetStats = function () {
  * @private
  */
 OSMAreaBuilder.prototype._emitArea = function (area) {
+
   var start = microtime.now();
 
   // get time spent in osmium preprocessing (before first area is received)
@@ -98,7 +101,6 @@ OSMAreaBuilder.prototype._emitArea = function (area) {
   try {
     var obj = {
       type: 'Feature',
-      geometry: wellknown.parse(area.wkt()),
       properties: area.tags()
     };
     obj.name = obj.properties.name || obj.properties.type;
@@ -110,10 +112,18 @@ OSMAreaBuilder.prototype._emitArea = function (area) {
       logger.info(this._stats.areaCount);
     }
 
+    // check if filter was provided and if so call it
+    if (this._callbacks.filter && !this._callbacks.filter(obj)) {
+      return;
+    }
+
+    // TODO: figure out an alternative to this because it's extremely slow
+    obj.geometry = wellknown.parse(area.wkt());
+
     var beforeCB = microtime.now();
     this._stats.timeInArea += beforeCB - start;
 
-    this._areaHandler(obj);
+    this._callbacks.area(obj);
 
     this._stats.timeInAreaHandler += microtime.now() - beforeCB;
   }
@@ -123,7 +133,7 @@ OSMAreaBuilder.prototype._emitArea = function (area) {
     area.name = area.tags().name;
     area.properties = area.tags();
 
-    this._errorHandler({ message: err.message, data: area });
+    this._callbacks.error({ message: err.message, data: area });
   }
 };
 
@@ -133,7 +143,7 @@ OSMAreaBuilder.prototype._emitArea = function (area) {
  * @private
  */
 OSMAreaBuilder.prototype._emitDone = function () {
-  this.emit('done');
+  this.emit('done', this._stats);
 };
 
 
