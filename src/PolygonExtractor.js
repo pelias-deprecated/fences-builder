@@ -6,37 +6,50 @@ var geojson_stream = require('geojson-stream');
 var JSONStream = require('JSONStream');
 
 /**
- * Process osm file and generate all found polygons containing administrative boundaries.
- * Write polygons to GEOJSON format (other formats coming soon).
+ * PolygonExtract class
  *
  * @param options object
  * @param options.inputFile string: path to input file
  * @param options.outputDir: path to output file, currently GEOJSON, so provide correct extension
- * @param callback function(err, results): called with statistics in results parameter
  */
-module.exports = function extractPolygons(options, callback) {
+function PolygonExtractor(options) {
+  this._adminLevelReg = new RegExp(/^\d+$/);
 
-  var self = {
-    options: options,
-    callback: callback,
-    streams: {},
-    child: fork(__dirname + '/childProcess.js')
+  this._options = options;
+  this._streams = {};
+
+  this._handlers = {
+    area: this._areaHandler.bind(this),
+    error: this._errorHandler.bind(this),
+    done: this._doneHandler.bind(this)
   };
 
-  var handlers = {
-    area: _areaHandler.bind(self),
-    error: _errorHandler.bind(self),
-    done: _doneHandler.bind(self)
-  };
+
+  this._child = fork(__dirname + '/childProcess.js');
 
   // handle events coming from child process
-  self.child.on('message', function (payload) {
-    if (handlers[payload.type]) {
-      handlers[payload.type](payload.data);
+  this._child.on('message', function (payload) {
+    if (this._handlers[payload.type]) {
+      this._handlers[payload.type](payload.data);
+    }
+  }.bind(this));
+}
+
+/**
+ * Process osm file and generate all found polygons containing administrative boundaries.
+ * Write polygons to GEOJSON format (other formats coming soon).
+ *
+ * @param callback function(err, results): called with statistics in results parameter
+ */
+PolygonExtractor.prototype.start = function (callback) {
+  this._callback = callback;
+
+  this._child.send({
+    type:'start',
+    data: {
+      inputFile: this._options.inputFile
     }
   });
-
-  self.child.send({ type:'start', data: { inputFile: options.inputFile } });
 };
 
 /**
@@ -45,9 +58,25 @@ module.exports = function extractPolygons(options, callback) {
  * @param area object
  * @private
  */
-function _areaHandler(area) {
-  _getLevelStream(this.options, this.streams, area.properties.admin_level).write(area);
-}
+PolygonExtractor.prototype._areaHandler = function (area) {
+  var admin_level = this._cleanAdminLevel(area.properties.admin_level);
+  this._getLevelStream(this._options, this._streams, admin_level).write(area);
+};
+
+/**
+ * Prepares admin_level value to be used as part of the output file name.
+ * If admin_level is not numeric, return "other"
+ *
+ * @param admin_level string
+ * @returns string
+ * @private
+ */
+PolygonExtractor.prototype._cleanAdminLevel = function (admin_level) {
+  if (this._adminLevelReg.test(admin_level)) {
+    return admin_level;
+  }
+  return 'other';
+};
 
 /**
  * Stream errors to json file
@@ -55,9 +84,9 @@ function _areaHandler(area) {
  * @param err object
  * @private
  */
-function _errorHandler(err) {
-  _getErrorStream(this.options, this.streams).write(err);
-}
+PolygonExtractor.prototype._errorHandler = function (err) {
+  this._getErrorStream(this._options, this._streams).write(err);
+};
 
 /**
  * End open streams, kill child process, invoke callback
@@ -65,17 +94,17 @@ function _errorHandler(err) {
  * @param results
  * @private
  */
-function _doneHandler(results) {
+PolygonExtractor.prototype._doneHandler = function (results) {
   // it's ok to kill the child process now
-  setImmediate(this.child.kill.bind(this.child));
+  setImmediate(this._child.kill.bind(this._child));
 
-  _endStreams(this.streams);
+  this._endStreams(this._streams);
 
   // only register the finish handler if client is waiting to hear back
-  if (this.callback) {
-    setImmediate(this.callback.bind(null, null, results));
+  if (this._callback) {
+    setImmediate(this._callback.bind(null, null, results));
   }
-}
+};
 
 /**
  * End all open output streams
@@ -83,13 +112,13 @@ function _doneHandler(results) {
  * @param streams
  * @private
  */
-function _endStreams(streams) {
+PolygonExtractor.prototype._endStreams = function (streams) {
   for (var s in streams) {
     if (streams.hasOwnProperty(s)) {
       streams[s].input.end();
     }
   }
-}
+};
 
 /**
  * Create or return existing stream for the given admin level
@@ -102,7 +131,7 @@ function _endStreams(streams) {
  * @returns Streams.Writable
  * @private
  */
-function _getLevelStream(options, streams, level) {
+PolygonExtractor.prototype._getLevelStream = function (options, streams, level) {
   if (streams[level]) {
     return streams[level].input;
   }
@@ -119,7 +148,7 @@ function _getLevelStream(options, streams, level) {
 
   streams[level] = { input: geojsonStream, output: outputStream };
   return streams[level].input;
-}
+};
 
 /**
  * Create or return existing error output stream
@@ -131,7 +160,7 @@ function _getLevelStream(options, streams, level) {
  * @returns Streams.Writable
  * @private
  */
-function _getErrorStream(options, streams) {
+PolygonExtractor.prototype._getErrorStream = function (options, streams) {
   if (streams.errors) {
     return streams.errors.input;
   }
@@ -147,4 +176,6 @@ function _getErrorStream(options, streams) {
 
   streams.errors = { input: jsonStream, output: outputStream };
   return streams.errors.input;
-}
+};
+
+module.exports = PolygonExtractor;
