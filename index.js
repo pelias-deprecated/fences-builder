@@ -1,1 +1,1 @@
-module.exports.extractPolygons = require('./src/extractPolygons');
+module.exports = require('./src/PolygonExtractor');

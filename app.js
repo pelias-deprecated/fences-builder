@@ -1,16 +1,16 @@
 var util = require('util');
-var openstreetmap_polygons = require('./');
+var PolygonExtractor = require('./');
 var logger = require('./src/util/logger');
 var config = require('pelias-config').generate();
 
 logger.info(util.format(
-  'Extracting admin boundaries from %s into %s (error dump: %s)',
+  'Extracting admin boundaries from %s into %s',
   config.inputFile,
-  config.outputDir,
-  config.errorDump
+  config.outputDir
 ));
 
-openstreetmap_polygons.extractPolygons(config, function (err, results) {
+var extractor = new PolygonExtractor(config);
+extractor.start(function (err, results) {
   if (err) {
     logger.error(err);
   }

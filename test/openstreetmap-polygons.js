@@ -1,7 +1,8 @@
 var fs = require('fs');
 var util = require('util');
 var should = require('should');
-var polygons = require('./../');
+
+var PolygonExtractor = require('./../');
 
 var expectedOutputDir = './test/data/expected_output/';
 var inputFileDir = './test/data/input/';
@@ -16,6 +17,7 @@ describe('openstreetmap-polygons', function () {
 
   var _error = null;
   var _results = null;
+  var _extractor = null;
 
   before(function(done) {
     this.timeout(0);
@@ -24,7 +26,8 @@ describe('openstreetmap-polygons', function () {
       outputDir: outputFileDir
     };
 
-    polygons.extractPolygons(options, function (err, results) {
+    _extractor = new PolygonExtractor(options);
+    _extractor.start(function (err, results) {
       _error = err;
       _results  = results;
       done();
