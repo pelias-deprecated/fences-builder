@@ -30,7 +30,7 @@ describe('openstreetmap-polygons', function () {
     _extractor.start(function (err, results) {
       _error = err;
       _results  = results;
-      done();
+      setTimeout(done, 30);
     });
   });
 
@@ -39,13 +39,19 @@ describe('openstreetmap-polygons', function () {
   });
 
   it('should return stats', function () {
-    var expectedStats = {
-      error_total: 1,
-      area_total: 67040,
-      area_matched: 211,
-      error_matched: 1
-    };
-    _results.should.be.eql(expectedStats);
+    var expAreaMatched = 205;
+    var expAreaTotal = 67040;
+    var expErrors = 66;
+
+    _results.areaMatched.should.be.eql(expAreaMatched);
+    _results.areaTotal.should.be.eql(expAreaTotal);
+    _results.errorMatched.should.be.eql(expErrors);
+    _results.errorTotal.should.be.eql(expErrors);
+    _results.osmiumResults.areaCount.should.be.eql(expAreaTotal);
+    _results.osmiumResults.errorCount.should.be.eql(expErrors);
+    _results.osmiumResults.should.have.property('timeInArea');
+    _results.osmiumResults.should.have.property('timeInAreaHandler');
+    _results.osmiumResults.should.have.property('timeInPreprocess');
   });
 
   it('should produce geojson files per level', function (done) {

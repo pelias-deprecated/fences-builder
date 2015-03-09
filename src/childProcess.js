@@ -38,27 +38,25 @@ function extractPolygons(inputFile) {
       process.send({type: 'area', data: area});
     },
     error: function _errorCallback(err) {
-      var area = err.data;
-      if (area.properties.boundary === 'administrative') {
-        _stats.errors++;
-        process.send({type: 'error', data: err});
-      }
+      _stats.errors++;
+      process.send({type: 'error', data: err});
     }
   };
 
-  var boundaryStream = new OSMAreaBuilder(inputFile, path.extname(inputFile), handlers);
+  var areaBuilder = new OSMAreaBuilder(inputFile, path.extname(inputFile), handlers);
 
-  boundaryStream.on('done', function (results) {
+  areaBuilder.on('done', function (results) {
     process.send({
       type: 'done',
       data: {
-        area_total: results.areaCount,
-        error_total: results.errorCount,
-        area_matched: _stats.matched,
-        error_matched: _stats.errors
+        osmiumResults: results,
+        areaTotal: results.areaCount,
+        errorTotal: results.errorCount,
+        areaMatched: _stats.matched,
+        errorMatched: _stats.errors
       }
     });
   });
 
-  boundaryStream.start();
+  areaBuilder.start();
 }

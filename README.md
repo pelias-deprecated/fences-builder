@@ -13,37 +13,49 @@ The easiest way to install `node.js` is with [nave.sh](https://github.com/isaacs
 
 ## Installation
 
-```bash
-$ npm install pelias-openstreetmap-polygons
-```
+    ```bash
+    $ npm install pelias-openstreetmap-polygons
+    ```
 
 ## Usage
 
-There is config.json in the project's etc directory. You can define the following parameters.
+There is a sample config.json in the project's etc directory. You can define the following parameters.
+Refer to [pelias-config](https://github.com/pelias/config) for config usage/setup.
 
-```javascript
-    {
-        "inputFile": "path/to/input/file",
-        "outputDir": "path/to/output/directory"
-    }
-```
+    ```javascript
+        {
+            "inputFile": "path/to/input/file",
+            "outputDir": "path/to/output/directory"
+        }
+    ```
 
 Once config is to your liking, run as follows.
 
-```bash
-$ npm start
-```
+    ```bash
+    $ npm start
+    ```
+
+If you'd like to run using the sample config file, just run as follows.
+
+    ```bash
+    $ npm run debug
+    ```
 
 ### Notes
+ * When processing a particularly large input file, you might need to use the `--max-old-space-size` flag for `node.js`, like...
 
-Osmium parser has been separated into a child process because it doesn't respect
-node's event loop.
+    `node --max-old-space-size=10000 app.js`
 
-## Running Unit Tests
 
-```bash
-$ npm test
-```
+ * Osmium parser has been separated into a child process because it doesn't respect node's event loop.
+
+## Running Tests
+
+Note that the tests don't attempt to verify osmium functionality, we trust that things are working as expected there.
+
+    ```bash
+    $ npm test
+    ```
 
 
 ### Continuous Integration
