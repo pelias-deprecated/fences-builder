@@ -32,6 +32,9 @@ function OSMAreaBuilder(inputFilePath, inputFileType, callbacks) {
   this._reader = new osmium.Reader(fileIn);
   this._handler = new osmium.Handler();
 
+  // if this isn't specified, osmium will throw exceptions when it encounters errors
+  this._location_handler.ignoreErrors();
+
   // multipolygon handler
   var mpReader = new osmium.Reader(fileIn, { node: false, way: true, relation: true });
   this._mp = new osmium.MultipolygonCollector();
@@ -136,7 +139,7 @@ OSMAreaBuilder.prototype._handleArea = function handleArea(area) {
 
   // log every once in a while
   if (this._stats.areaCount % 100000 === 0) {
-    logger.info(this._stats.areaCount);
+    logger.verbose(this._stats.areaCount);
   }
 
   try {

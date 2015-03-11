@@ -30,7 +30,7 @@ describe('openstreetmap-polygons', function () {
     _extractor.start(function (err, results) {
       _error = err;
       _results  = results;
-      setTimeout(done, 30);
+      setTimeout(done, 30); // timeout ensures the error file has been written and closed
     });
   });
 
