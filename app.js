@@ -1,6 +1,6 @@
 var util = require('util');
 var PolygonExtractor = require('./');
-var logger = require('./src/util/logger');
+var logger = require('pelias-logger').get('app');
 var config = require('pelias-config').generate();
 
 logger.info(util.format(
@@ -15,7 +15,7 @@ extractor.start(function (err, results) {
     logger.error(err);
   }
   else {
-    logger.info(results);
+    logger.info('Results:', results);
   }
 });
 
