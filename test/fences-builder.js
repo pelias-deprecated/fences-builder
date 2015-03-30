@@ -13,7 +13,7 @@ var inputFilePath = inputFileDir + baseFileName;
 var outputFilePath = '%s' + baseFileName + '-level-%s.geojson';
 var errorFilePath =  '%s' + baseFileName  + '.err.json';
 
-describe('openstreetmap-polygons', function () {
+describe('fences-builder', function () {
 
   var _error = null;
   var _results = null;
@@ -21,12 +21,8 @@ describe('openstreetmap-polygons', function () {
 
   before(function(done) {
     this.timeout(0);
-    var options = {
-      inputFile: inputFilePath,
-      outputDir: outputFileDir
-    };
 
-    _extractor = new PolygonExtractor(options);
+    _extractor = new PolygonExtractor(inputFilePath, outputFileDir);
     _extractor.start(function (err, results) {
       _error = err;
       _results  = results;

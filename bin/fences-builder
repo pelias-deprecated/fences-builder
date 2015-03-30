@@ -1,0 +1,36 @@
+#!/usr/bin/env node
+
+var util = require('util');
+var nconf = require('nconf');
+var colors = require('colors');
+var PolygonExtractor = require('./../index');
+
+
+// setup config
+nconf.argv().env();
+
+if (nconf.get('config')) {
+  nconf.file({file: nconf.get('config')});
+}
+
+if (! (nconf.get('inputFile') && nconf.get('outputDir')) ) {
+  console.error(colors.red('[Invalid usage]:'),
+    'Must specify inputFile and outputDir. If using config file, use --config=<path>');
+  process.exit(1);
+}
+
+console.log(util.format(
+  'Extracting admin boundaries from %s into %s',
+  nconf.get('inputFile'),
+  nconf.get('outputDir')
+).green);
+
+var extractor = new PolygonExtractor(nconf.get('inputFile'), nconf.get('outputDir'));
+extractor.start(function (err, results) {
+  if (err) {
+    console.error(colors.red('[Error]:'), err.message);
+  }
+  else {
+    console.log(colors.blue('[Results]:'), JSON.stringify(results, null, 2));
+  }
+});
