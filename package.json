@@ -1,6 +1,6 @@
 {
-  "name": "pelias-openstreetmap-polygons",
-  "version": "0.1.0",
+  "name": "fences-builder",
+  "version": "0.0.1",
   "description": "Extract administrative polygons from openstreetmap data",
   "keywords": [
     "osm",
@@ -8,24 +8,29 @@
     "area",
     "admin_level",
     "administrative",
-    "openstreetmap"
+    "openstreetmap",
+    "geojson"
   ],
   "author": "Mapzen",
   "main": "index.js",
+  "bin": {
+    "fences-builder": "./bin/fences-builder"
+  },
+  "engines": {
+    "node" : ">=0.10.3 <0.11"
+  },
   "scripts": {
-    "start": "node app.js",
-    "debug": "time PELIAS_CONFIG=./etc/config.json node app.js",
     "test": "./node_modules/.bin/mocha -R spec test/"
   },
   "dependencies": {
     "JSONStream": "^0.10.0",
     "async": "^0.9.0",
+    "colors": "^1.0.3",
     "geojson-stream": "0.0.0",
     "lodash": "^3.5.0",
     "microtime": "^1.2.0",
+    "nconf": "^0.7.1",
     "osmium": "^0.3.0",
-    "pelias-config": "^0.*.*",
-    "pelias-logger": "^0.*.*",
     "wellknown": "^0.3.1"
   },
   "devDependencies": {
@@ -36,11 +41,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pelias/openstreetmap-polygons"
+    "url": "https://github.com/pelias/fences-builder"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pelias/openstreetmap-polygons/issues"
+    "url": "https://github.com/pelias/fences-builder/issues"
   },
-  "homepage": "https://github.com/pelias/openstreetmap-polygons"
+  "homepage": "https://github.com/pelias/fences-builder"
 }
+

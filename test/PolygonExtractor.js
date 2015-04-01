@@ -17,8 +17,11 @@ var PolygonExtractor = proxyquire('./../src/PolygonExtractor', { child_process: 
 describe('PolygonExtractor', function () {
 
   describe('#_areaHandler', function () {
-    var _options = { foo: 'bar' };
-    var _inst = new PolygonExtractor(_options);
+    var _options = {
+      inputFile: 'input_file',
+      outputDir: 'output_dir'
+    };
+    var _inst = new PolygonExtractor(_options.inputFile, _options.outputDir);
     var _stream = {
       write: function (data) {
         should.exist(data);
@@ -27,7 +30,7 @@ describe('PolygonExtractor', function () {
 
     it('should split output into files by admin_level', function (done) {
       _inst._getLevelStream = function (options, streams, level) {
-        options.should.equal(_options);
+        options.should.eql(_options);
         streams.should.eql({});
         level.should.equal('8');
         done();
@@ -40,7 +43,7 @@ describe('PolygonExtractor', function () {
 
     it('should direct invalid admin_level areas into "other"', function (done) {
       _inst._getLevelStream = function (options, streams, level) {
-        options.should.equal(_options);
+        options.should.eql(_options);
         streams.should.eql({});
         level.should.equal('other');
 

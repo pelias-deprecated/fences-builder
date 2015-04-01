@@ -3,13 +3,12 @@ var osmium = require('osmium');
 var EventEmitter = require('events').EventEmitter;
 var wellknown = require('wellknown');
 var microtime = require('microtime');
-var logger = require('pelias-logger').get('OSMAreaBuilder');
 var _ = require('lodash');
 
 
 /**
  * OSMAreaBuilder is a Readable stream that emits Area (multipolygon) objects
- * found in OpenStreetMap input file.
+ * found in OpenStreetMap input file. It is essentially a wrapper for osmium.
  *
  * @param inputFilePath string
  * @param inputFileType string
@@ -139,7 +138,7 @@ OSMAreaBuilder.prototype._handleArea = function handleArea(area) {
 
   // log every once in a while
   if (this._stats.areaCount % 100000 === 0) {
-    logger.verbose(this._stats.areaCount);
+    console.log(this._stats.areaCount);
   }
 
   try {
@@ -188,9 +187,9 @@ OSMAreaBuilder.prototype._handleErrors = function handleErrors() {
   var wayKeys = Object.keys(this._index.ways);
   var relationKeys = Object.keys(this._index.relations);
 
-  logger.debug('ways: ', wayKeys.length);
-  logger.debug('relations: ', relationKeys.length);
-  logger.debug('areas: ', this._index.areas.length, _.uniq(this._index.areas).length);
+  //console.log('ways: ', wayKeys.length);
+  //console.log('relations: ', relationKeys.length);
+  //console.log('areas: ', this._index.areas.length, _.uniq(this._index.areas).length);
 
   // for every relation not found in areas, assume there was an error
   _.difference(relationKeys, this._index.areas).forEach(function (relationKey) {

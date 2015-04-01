@@ -8,14 +8,16 @@ var JSONStream = require('JSONStream');
 /**
  * PolygonExtract class
  *
- * @param options object
- * @param options.inputFile string: path to input file
- * @param options.outputDir: path to output file, currently GEOJSON, so provide correct extension
+ * @param {string} inputFile path to input file
+ * @param {string} outputDir path to output file, currently GEOJSON, so provide correct extension
  */
-function PolygonExtractor(options) {
+function PolygonExtractor(inputFile, outputDir) {
   this._adminLevelReg = new RegExp(/^\d+$/);
 
-  this._options = options;
+  this._options = {
+    inputFile: inputFile,
+    outputDir: outputDir
+  };
   this._streams = {};
 
   this._handlers = {
@@ -179,3 +181,4 @@ PolygonExtractor.prototype._getErrorStream = function (options, streams) {
 };
 
 module.exports = PolygonExtractor;
+
