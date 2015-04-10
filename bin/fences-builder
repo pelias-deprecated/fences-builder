@@ -29,6 +29,7 @@ var extractor = new PolygonExtractor(nconf.get('inputFile'), nconf.get('outputDi
 extractor.start(function (err, results) {
   if (err) {
     console.error(colors.red('[Error]:'), err.message);
+    process.exit(1);
   }
   else {
     console.log(colors.blue('[Results]:'), JSON.stringify(results, null, 2));

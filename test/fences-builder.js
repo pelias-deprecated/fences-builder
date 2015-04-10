@@ -10,8 +10,8 @@ var outputFileDir = './test/data/';
 var baseFileName = 'philadelphia_pennsylvania.osm.pbf';
 
 var inputFilePath = inputFileDir + baseFileName;
-var outputFilePath = '%s' + baseFileName + '-level-%s.geojson';
-var errorFilePath =  '%s' + baseFileName  + '.err.json';
+var outputFilePath = '%s/admin_level_%s.geojson';
+var errorFilePath =  '%s/errors.json';
 
 describe('fences-builder', function () {
 

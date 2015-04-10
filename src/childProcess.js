@@ -24,21 +24,21 @@ process.on('message', function (payload) {
  * @param inputFile string
  */
 function extractPolygons(inputFile) {
-  var _stats = {
+  var stats = {
     matched: 0,
     errors: 0
   };
 
   var handlers = {
-    filter: function _filterCallback(area) {
+    filter: function filterCallback(area) {
       return !!(area.properties.boundary === 'administrative' && area.properties.admin_level);
     },
-    area: function _areaCallback(area) {
-      _stats.matched++;
+    area: function areaCallback(area) {
+      stats.matched++;
       process.send({type: 'area', data: area});
     },
-    error: function _errorCallback(err) {
-      _stats.errors++;
+    error: function errorCallback(err) {
+      stats.errors++;
       process.send({type: 'error', data: err});
     }
   };
@@ -52,11 +52,14 @@ function extractPolygons(inputFile) {
         osmiumResults: results,
         areaTotal: results.areaCount,
         errorTotal: results.errorCount,
-        areaMatched: _stats.matched,
-        errorMatched: _stats.errors
+        areaMatched: stats.matched,
+        errorMatched: stats.errors
       }
     });
   });
 
   areaBuilder.start();
+
+  // process needs to be kill explicitly, otherwise it just hangs around
+  process.exit();
 }
