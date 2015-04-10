@@ -13,7 +13,9 @@ if (nconf.get('config')) {
   nconf.file({file: nconf.get('config')});
 }
 
-if (! (nconf.get('inputFile') && nconf.get('outputDir')) ) {
+var config = nconf.get();
+
+if (! (config.inputFile && config.outputDir) ) {
   console.error(colors.red('[Invalid usage]:'),
     'Must specify inputFile and outputDir. If using config file, use --config=<path>');
   process.exit(1);
@@ -21,11 +23,11 @@ if (! (nconf.get('inputFile') && nconf.get('outputDir')) ) {
 
 console.log(util.format(
   'Extracting admin boundaries from %s into %s',
-  nconf.get('inputFile'),
-  nconf.get('outputDir')
+  config.inputFile,
+  config.outputDir
 ).green);
 
-var extractor = new PolygonExtractor(nconf.get('inputFile'), nconf.get('outputDir'));
+var extractor = new PolygonExtractor(config.inputFile, config.outputDir);
 extractor.start(function (err, results) {
   if (err) {
     console.error(colors.red('[Error]:'), err.message);
