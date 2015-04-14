@@ -26,7 +26,7 @@ describe('fences-builder', function () {
     _extractor.start(function (err, results) {
       _error = err;
       _results  = results;
-      setTimeout(done, 30); // timeout ensures the error file has been written and closed
+      setTimeout(done, 50); // timeout ensures the error file has been written and closed
     });
   });
 
@@ -70,7 +70,11 @@ describe('fences-builder', function () {
       expected.features = sortFeatures(expected.features);
       actual.features = sortFeatures(actual.features);
 
-      actual.should.be.eql(expected);
+      expected.features.length.should.equal(actual.features.length);
+
+      for(var i=0; i<expected.features.length; i++) {
+        actual.features[i].should.eql(expected.features[i]);
+      }
 
       // delete temp file
       fs.unlinkSync(actualFile);
