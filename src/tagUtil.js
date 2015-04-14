@@ -33,7 +33,7 @@ module.exports.buildIndexId = function buildIndexId(obj) {
  * @returns {string|undefined}
  */
 module.exports.findNameTag = function findNameTag(obj) {
-  var name = undefined;
+  var name;
   var tags = obj.tags();
 
   NAME_KEYS.every(function (key) {
