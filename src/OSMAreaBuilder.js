@@ -4,6 +4,7 @@ var EventEmitter = require('events').EventEmitter;
 var wellknown = require('wellknown');
 var microtime = require('microtime');
 var _ = require('lodash');
+var tagUtil = require('./tagUtil');
 
 
 /**
@@ -77,8 +78,8 @@ OSMAreaBuilder.prototype.start = function start() {
  * @private
  */
 OSMAreaBuilder.prototype._handleRelation = function handleRelation(relation) {
-  if (checkAdminTags(relation)) {
-    this._index.relations[buildIndexId((relation))] = {
+  if (tagUtil.checkAdminTags(relation)) {
+    this._index.relations[tagUtil.buildIndexId((relation))] = {
       id: relation.id,
       name: relation.tags('name'),
       properties: relation.tags(),
@@ -94,10 +95,10 @@ OSMAreaBuilder.prototype._handleRelation = function handleRelation(relation) {
  * @private
  */
 OSMAreaBuilder.prototype._handleWay = function handleWay(way) {
-  if (checkAdminTags(way)) {
-    this._index.ways[buildIndexId(way)] = {
+  if (tagUtil.checkAdminTags(way)) {
+    this._index.ways[tagUtil.buildIndexId(way)] = {
       id: way.id,
-      name: way.tags('name'),
+      name: tagUtil.findNameTag(way),
       properties: way.tags()
     };
   }
@@ -122,16 +123,16 @@ OSMAreaBuilder.prototype._handleArea = function handleArea(area) {
 
   var obj = {
     type: 'Feature',
-    properties: area.tags()
+    properties: area.tags(),
+    name: tagUtil.findNameTag(area)
   };
-  obj.name = obj.properties.name || obj.properties.type;
 
   // check if filter was provided and if so call it
   if (this._callbacks.filter && !this._callbacks.filter(obj)) {
     return;
   }
 
-  if (!area.tags('name')) {
+  if (!obj.name) {
     this._handleError({message: 'Area is missing a name tag', data: obj});
     return;
   }
@@ -150,7 +151,7 @@ OSMAreaBuilder.prototype._handleArea = function handleArea(area) {
     return;
   }
 
-  this._index.areas.push(buildIndexId(area));
+  this._index.areas.push(tagUtil.buildIndexId(area));
 
   var beforeCB = microtime.now();
   this._stats.timeInArea += beforeCB - start;
@@ -253,32 +254,5 @@ OSMAreaBuilder.prototype._resetStats = function resetStats() {
     areas: []
   };
 };
-
-/*
- HELPER FUNCTIONS
-*/
-
-/**
- * Check if all needed tags are in place
- *
- * @param {object} obj
- * @returns {boolean}
- */
-function checkAdminTags(obj) {
-  return obj.tags('name') &&
-    obj.tags('boundary') === 'administrative' &&
-    obj.tags('admin_level');
-}
-
-/**
- * Concat properties to compile index id
- *
- * @param {object} obj
- * @returns {string}
- */
-function buildIndexId(obj) {
-  return obj.tags('name') + ':admin_level_' + obj.tags('admin_level');
-}
-
 
 module.exports = OSMAreaBuilder;

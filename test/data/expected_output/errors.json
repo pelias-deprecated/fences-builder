@@ -3,8 +3,6 @@
 ,
 {"message":"Area is missing a name tag","data":{"type":"Feature","properties":{"source":"TIGER/Line® 2009 Place Shapefiles (http://www.census.gov/geo/www/tiger/)","boundary":"administrative","admin_level":"8"}}}
 ,
-{"message":"Area is missing a name tag","data":{"type":"Feature","properties":{"is_in":"USA, Delaware","place":"village","source":"TIGER/Line® 2008 Place Shapefiles (http://www.census.gov/geo/www/tiger/)","boundary":"administrative","tiger:CPI":"N","wikipedia":"en:Ardencroft, Delaware","place_name":"Ardencroft","tiger:LSAD":"47","tiger:NAME":"Ardencroft","admin_level":"8","border_type":"village","is_in:state":"Delaware","tiger:MTFCC":"G4110","is_in:country":"USA","tiger:CLASSFP":"C1","tiger:PCICBSA":"N","tiger:PLACEFP":"01530","tiger:PLACENS":"02391521","tiger:PLCIDFP":"1001530","tiger:STATEFP":"10","tiger:FUNCSTAT":"A","tiger:NAMELSAD":"Ardencroft village","tiger:PCINECTA":"N","tiger:reviewed":"no","is_in:iso_3166_2":"US:DE","is_in:state_code":"DE","is_in:country_code":"US"}}}
-,
 {"message":"Area is missing a name tag","data":{"type":"Feature","properties":{"source":"TIGER/Line® 2008 Place Shapefiles (http://www.census.gov/geo/www/tiger/)","boundary":"administrative","created_by":"polyshp2osm-multipoly","admin_level":"8"}}}
 ,
 {"message":"Area is missing a name tag","data":{"type":"Feature","properties":{"source":"TIGER/Line® 2008 Place Shapefiles (http://www.census.gov/geo/www/tiger/)","boundary":"administrative","admin_level":"8"}}}

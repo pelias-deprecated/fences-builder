@@ -35,9 +35,9 @@ describe('fences-builder', function () {
   });
 
   it('should return stats', function () {
-    var expAreaMatched = 205;
+    var expAreaMatched = 206;
     var expAreaTotal = 67040;
-    var expErrors = 66;
+    var expErrors = 65;
 
     _results.areaMatched.should.be.eql(expAreaMatched);
     _results.areaTotal.should.be.eql(expAreaTotal);
