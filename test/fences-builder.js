@@ -66,6 +66,10 @@ describe('fences-builder', function () {
         if (avgA < avgB) { return -1; }
         if (avgA > avgB) { return 1; }
 
+        if (Object.keys(a.properties).length > Object.keys(b.properties).length) { return -1; }
+        if (Object.keys(a.properties).length < Object.keys(b.properties).length) { return 1; }
+
+        console.log('sorting tie, could result in unexpected error', a.name, b.name);
         return 0;
       });
     }
