@@ -56,6 +56,16 @@ describe('fences-builder', function () {
       return array.sort(function (a, b) {
         if (a.name < b.name) { return -1; }
         if (a.name > b.name) { return 1; }
+
+        function sum(previousValue, currentValue) {
+          return previousValue + currentValue;
+        }
+        var avgA = a.geometry.coordinates.reduce(sum);
+        var avgB = b.geometry.coordinates.reduce(sum);
+
+        if (avgA < avgB) { return -1; }
+        if (avgA > avgB) { return 1; }
+
         return 0;
       });
     }
