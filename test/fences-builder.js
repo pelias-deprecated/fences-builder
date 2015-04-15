@@ -60,11 +60,11 @@ describe('fences-builder', function () {
         function sum(previousValue, currentValue) {
           return previousValue + currentValue;
         }
-        var avgA = a.geometry.coordinates.reduce(sum);
-        var avgB = b.geometry.coordinates.reduce(sum);
+        var sumA = a.geometry.coordinates.reduce(sum);
+        var sumB = b.geometry.coordinates.reduce(sum);
 
-        if (avgA < avgB) { return -1; }
-        if (avgA > avgB) { return 1; }
+        if (sumA < sumB) { return -1; }
+        if (sumA > sumB) { return 1; }
 
         if (Object.keys(a.properties).length > Object.keys(b.properties).length) { return -1; }
         if (Object.keys(a.properties).length < Object.keys(b.properties).length) { return 1; }

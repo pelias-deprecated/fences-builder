@@ -30,16 +30,17 @@ module.exports.buildIndexId = function buildIndexId(obj) {
  * Find name tag
  *
  * @param {object} obj
- * @returns {string|undefined}
+ * @returns {string|null}
  */
 module.exports.findNameTag = function findNameTag(obj) {
-  var name;
   var tags = obj.tags();
+  var count = NAME_KEYS.length;
 
-  NAME_KEYS.every(function (key) {
-    name = tags[key];
-    return !name; // stop if a name is found
-  });
+  for(var i=0; i<count; i++) {
+    if (tags[NAME_KEYS[i]]) {
+      return tags[NAME_KEYS[i]];
+    }
+  }
 
-  return name;
+  return null;
 };

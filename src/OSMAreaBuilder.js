@@ -98,7 +98,7 @@ OSMAreaBuilder.prototype._handleWay = function handleWay(way) {
   if (tagUtil.checkAdminTags(way)) {
     this._index.ways[tagUtil.buildIndexId(way)] = {
       id: way.id,
-      name: tagUtil.findNameTag(way),
+      name: tagUtil.findNameTag(way) || undefined,
       properties: way.tags()
     };
   }
@@ -124,7 +124,7 @@ OSMAreaBuilder.prototype._handleArea = function handleArea(area) {
   var obj = {
     type: 'Feature',
     properties: area.tags(),
-    name: tagUtil.findNameTag(area)
+    name: tagUtil.findNameTag(area) || undefined
   };
 
   // check if filter was provided and if so call it
