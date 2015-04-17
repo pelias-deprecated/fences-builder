@@ -26,7 +26,7 @@ describe('fences-builder', function () {
     _extractor.start(function (err, results) {
       _error = err;
       _results  = results;
-      setTimeout(done, 30); // timeout ensures the error file has been written and closed
+      setTimeout(done, 50); // timeout ensures the error file has been written and closed
     });
   });
 
@@ -35,9 +35,9 @@ describe('fences-builder', function () {
   });
 
   it('should return stats', function () {
-    var expAreaMatched = 205;
+    var expAreaMatched = 206;
     var expAreaTotal = 67040;
-    var expErrors = 66;
+    var expErrors = 65;
 
     _results.areaMatched.should.be.eql(expAreaMatched);
     _results.areaTotal.should.be.eql(expAreaTotal);
@@ -56,6 +56,20 @@ describe('fences-builder', function () {
       return array.sort(function (a, b) {
         if (a.name < b.name) { return -1; }
         if (a.name > b.name) { return 1; }
+
+        function sum(previousValue, currentValue) {
+          return previousValue + currentValue;
+        }
+        var sumA = a.geometry.coordinates.reduce(sum);
+        var sumB = b.geometry.coordinates.reduce(sum);
+
+        if (sumA < sumB) { return -1; }
+        if (sumA > sumB) { return 1; }
+
+        if (Object.keys(a.properties).length > Object.keys(b.properties).length) { return -1; }
+        if (Object.keys(a.properties).length < Object.keys(b.properties).length) { return 1; }
+
+        console.log('sorting tie, could result in unexpected error', a.name, b.name);
         return 0;
       });
     }
@@ -70,7 +84,11 @@ describe('fences-builder', function () {
       expected.features = sortFeatures(expected.features);
       actual.features = sortFeatures(actual.features);
 
-      actual.should.be.eql(expected);
+      expected.features.length.should.equal(actual.features.length);
+
+      for(var i=0; i<expected.features.length; i++) {
+        actual.features[i].should.eql(expected.features[i]);
+      }
 
       // delete temp file
       fs.unlinkSync(actualFile);
