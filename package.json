@@ -20,7 +20,6 @@
     "node": ">=0.10.3 <0.11"
   },
   "scripts": {
-    "mocha": "./node_modules/.bin/mocha -R spec test/",
     "test": "node test/run.js | tap-spec",
     "coverage": "node_modules/.bin/istanbul cover test/run.js"
   },
@@ -38,10 +37,8 @@
   },
   "devDependencies": {
     "istanbul": "^0.3.13",
-    "mocha": "^2.1.0",
     "precommit-hook": "1.0.7",
     "proxyquire": "^1.4.0",
-    "should": "^5.0.0",
     "tap-spec": "^3.0.0",
     "tape": "^4.0.0"
   },
