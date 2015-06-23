@@ -22,8 +22,8 @@ module.exports.checkAdminTags = function checkAdminTags(obj) {
  * @param {object} obj
  * @returns {string}
  */
-module.exports.buildIndexId = function buildIndexId(obj) {
-  return obj.tags('name') + ':admin_level_' + obj.tags('admin_level');
+module.exports.buildIndexId = function buildIndexId(type, id) {
+  return type + ':' + id;
 };
 
 /**
