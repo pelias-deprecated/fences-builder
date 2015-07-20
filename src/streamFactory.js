@@ -1,8 +1,10 @@
 var fs = require('fs-extra');
 var util = require('util');
+var moment = require('moment');
 var path = require('path');
-var geojson_stream = require('geojson-stream');
+var geojson_stream = require('geocodejson-stream');
 var JSONStream = require('JSONStream');
+var pkg = require('../package.json');
 
 /**
  * Map of created streams.
@@ -35,7 +37,7 @@ module.exports.getLevelStream = function getLevelStream(outputDir, level) {
   var outputFilePath = path.join(outputDir,
     util.format('admin_level_%s.geojson', level));
 
-  var geojsonStream = geojson_stream.stringify();
+  var geojsonStream = geojson_stream.stringify(buildGeocodingInfo());
   var outputStream = fs.createWriteStream(outputFilePath);
 
   // setup the output streams
@@ -81,3 +83,26 @@ module.exports.endStreams = function endStreams() {
     }
   }
 };
+
+/**
+ * Helper function for creating geocoding info block
+ *
+ * @returns {{
+ *  creation_date: 'YYYY-MM-DD',
+ *  generator: {
+ *    name: string,
+ *    version: string
+ *  },
+ *  license: string}}
+ */
+function buildGeocodingInfo() {
+  return {
+    creation_date: moment().format('YYYY-MM-DD'),
+    generator: {
+      author: pkg.author,
+      package: pkg.name,
+      version: pkg.version
+    },
+    license: 'ODbL (see http://www.openstreetmap.org/copyright)'
+  };
+}

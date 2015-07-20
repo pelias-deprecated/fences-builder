@@ -28,9 +28,10 @@
     "async": "^0.9.0",
     "colors": "^1.0.3",
     "fs-extra": "^0.18.0",
-    "geojson-stream": "0.0.0",
+    "geocodejson-stream": "0.0.1",
     "lodash": "^3.5.0",
     "microtime": "^1.2.0",
+    "moment": "^2.10.3",
     "nconf": "^0.7.1",
     "osmium": "^0.3.0",
     "wellknown": "^0.3.1"
