@@ -1,6 +1,6 @@
 {
   "name": "fences-builder",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Extract administrative polygons from openstreetmap data",
   "keywords": [
     "osm",
@@ -24,11 +24,11 @@
     "coverage": "node_modules/.bin/istanbul cover test/run.js"
   },
   "dependencies": {
-    "JSONStream": "^0.10.0",
     "async": "^0.9.0",
     "colors": "^1.0.3",
     "fs-extra": "^0.18.0",
-    "geocodejson-stream": "0.0.1",
+    "geocodejson-stream": "^0.0.1",
+    "jsonstream": "^1.0.3",
     "lodash": "^3.5.0",
     "microtime": "^1.2.0",
     "moment": "^2.10.3",
