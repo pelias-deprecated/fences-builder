@@ -79,7 +79,7 @@ OSMAreaBuilder.prototype.start = function start() {
  */
 OSMAreaBuilder.prototype._handleRelation = function handleRelation(relation) {
   if (tagUtil.checkAdminTags(relation)) {
-    this._index.relations[tagUtil.buildIndexId((relation))] = {
+    this._index.osmObjs[tagUtil.buildIndexId('relation', relation.id)] = {
       id: relation.id,
       name: relation.tags('name'),
       properties: relation.tags(),
@@ -96,12 +96,38 @@ OSMAreaBuilder.prototype._handleRelation = function handleRelation(relation) {
  */
 OSMAreaBuilder.prototype._handleWay = function handleWay(way) {
   if (tagUtil.checkAdminTags(way)) {
-    this._index.ways[tagUtil.buildIndexId(way)] = {
+    this._index.osmObjs[tagUtil.buildIndexId('way', way.id)] = {
       id: way.id,
       name: tagUtil.findNameTag(way) || undefined,
       properties: way.tags()
     };
   }
+};
+
+/**
+ * Construct a fences object out of the osmium area
+ *
+ * @param area
+ * @returns {object} { id: {number}, osm_type: "relation"|"way, type: "Feature", properties: {object} }
+ */
+OSMAreaBuilder.prototype._buildOSMObjectFromArea = function buildOSMObjectFromArea(area) {
+  var obj = {};
+
+  /**
+   * NOTE: osmium will multiply osm original ids by 2 and add 1 if it's a relation.
+   * This is done to generate a unique internal id for every area. Here we need to reconstruct the
+   * original id and type.
+   */
+
+  obj.id = Math.floor(area.id / 2);
+  obj.osm_type = (area.id % 2 === 0) ? 'way' : 'relation';
+
+  obj.type = 'Feature';
+  obj.name = tagUtil.findNameTag(area) || undefined;
+
+  obj.properties = area.tags();
+
+  return obj;
 };
 
 /**
@@ -121,11 +147,7 @@ OSMAreaBuilder.prototype._handleArea = function handleArea(area) {
 
   this._stats.areaCount++;
 
-  var obj = {
-    type: 'Feature',
-    properties: area.tags(),
-    name: tagUtil.findNameTag(area) || undefined
-  };
+  var obj = this._buildOSMObjectFromArea(area);
 
   // check if filter was provided and if so call it
   if (this._callbacks.filter && !this._callbacks.filter(obj)) {
@@ -147,11 +169,11 @@ OSMAreaBuilder.prototype._handleArea = function handleArea(area) {
     obj.geometry = wellknown.parse(area.wkt());
   }
   catch (err) {
-    this._handleError({ message: err.message, data: obj });
+    this._handleError({ message: '[OSMIUM]: ' + err.message, data: obj });
     return;
   }
 
-  this._index.areas.push(tagUtil.buildIndexId(area));
+  this._index.areas.push(tagUtil.buildIndexId(obj.osm_type, obj.id));
 
   var beforeCB = microtime.now();
   this._stats.timeInArea += beforeCB - start;
@@ -185,40 +207,11 @@ OSMAreaBuilder.prototype._handleError = function handleError(err) {
  * @private
  */
 OSMAreaBuilder.prototype._handleErrors = function handleErrors() {
-  var wayKeys = Object.keys(this._index.ways);
-  var relationKeys = Object.keys(this._index.relations);
-
-  //console.log('ways: ', wayKeys.length);
-  //console.log('relations: ', relationKeys.length);
-  //console.log('areas: ', this._index.areas.length, _.uniq(this._index.areas).length);
+  var osmObjKeys = Object.keys(this._index.osmObjs);
 
   // for every relation not found in areas, assume there was an error
-  _.difference(relationKeys, this._index.areas).forEach(function (relationKey) {
-    var relation = this._index.relations[relationKey];
-
-    // if no members found, not good
-    if (!relation.members || relation.members.length === 0) {
-      this._handleError({message: 'Relation has no members', data: relation});
-      return;
-    }
-
-    // attempt to see which way members are missing (if any)
-    var missingWays = 0;
-    relation.members.forEach(function (member) {
-      if ( member.type === 'w' && !(member.ref in wayKeys) ) {
-        member.missing = true;
-        missingWays++;
-      }
-    });
-
-    if (missingWays > 0) {
-      relation.missingWayCount = missingWays;
-      this._handleError({message: 'Relation missing way members', data: relation});
-      return;
-    }
-
-    this._handleError({message: 'Problematic relation', data: relation});
-
+  _.difference(osmObjKeys, this._index.areas).forEach(function (osmObjKey) {
+    this._handleError({message: 'Failed to load', data: this._index.osmObjs[osmObjKey]});
   }.bind(this));
 };
 
@@ -249,8 +242,7 @@ OSMAreaBuilder.prototype._resetStats = function resetStats() {
   };
 
   this._index = {
-    relations: {},
-    ways: {},
+    osmObjs: {},
     areas: []
   };
 };

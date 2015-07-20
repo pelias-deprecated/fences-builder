@@ -49,7 +49,7 @@ module.exports.tests.execute = function(test) {
     before(function () {
       var expAreaMatched = 206;
       var expAreaTotal = 67040;
-      var expErrors = 65;
+      var expErrors = 71;
 
       t.deepEqual(_results.areaMatched, expAreaMatched, 'validate extracted area count');
       t.deepEqual(_results.areaTotal, expAreaTotal, 'validate total count');
