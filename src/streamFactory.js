@@ -3,7 +3,7 @@ var util = require('util');
 var moment = require('moment');
 var path = require('path');
 var geojson_stream = require('geocodejson-stream');
-var JSONStream = require('JSONStream');
+var JSONStream = require('jsonstream');
 var pkg = require('../package.json');
 
 /**
