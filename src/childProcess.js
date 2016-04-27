@@ -31,7 +31,7 @@ function extractPolygons(inputFile) {
 
   var handlers = {
     filter: function filterCallback(area) {
-      return !!(area.properties.boundary === 'administrative' && area.properties.admin_level);
+      return !!(area.properties.boundary == 'administrative' || area.properties.boundary == 'historic' || area.properties.boundary == 'ceremonial');
     },
     area: function areaCallback(area) {
       stats.matched++;

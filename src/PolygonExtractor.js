@@ -105,6 +105,10 @@ PolygonExtractor.prototype.doneHandler = function (/*results*/) {
 PolygonExtractor.prototype.cleanAdminLevel = function (adminLevel) {
   var adminLevelReg = new RegExp(/^\d+$/);
 
+  if ((adminLevel == undefined) || (adminLevel == null)){
+    adminLevel = 6;
+  }
+
   if (adminLevelReg.test(adminLevel)) {
     return adminLevel;
   }
