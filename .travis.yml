@@ -1,10 +1,23 @@
 language: node_js
 node_js:
-  - 0.10.35
+  - 0.12
+  - 4
+  - 5
+  - 6
 compiler:
   - clang
   - gcc
 before_install:
-  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - 'sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y'
   - sudo apt-get update
   - sudo apt-get install g++-4.8
+sudo: false
+cache:
+  directories:
+    - node_modules
+before_script:
+  - npm prune
+matrix:
+  fast_finish: true
+  allow_failures:
+    - node_js: 6
