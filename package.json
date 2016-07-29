@@ -30,18 +30,18 @@
     "geocodejson-stream": "^0.0.1",
     "jsonstream": "^1.0.3",
     "lodash": "^3.5.0",
-    "microtime": "^1.2.0",
+    "microtime": "^2.1.1",
     "moment": "^2.10.3",
     "nconf": "^0.7.1",
-    "osmium": "^0.3.0",
+    "osmium": "^0.5.2",
     "wellknown": "^0.3.1"
   },
   "devDependencies": {
     "istanbul": "^0.3.13",
     "precommit-hook": "1.0.7",
     "proxyquire": "^1.4.0",
-    "tap-spec": "^3.0.0",
-    "tape": "^4.0.0"
+    "tap-spec": "^4.1.1",
+    "tape": "^4.6.0"
   },
   "repository": {
     "type": "git",
