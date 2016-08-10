@@ -11,9 +11,7 @@ var NAME_KEYS = [
  * @returns {boolean}
  */
 module.exports.checkAdminTags = function checkAdminTags(obj) {
-  return obj.tags('name') &&
-    obj.tags('boundary') === 'administrative' &&
-    obj.tags('admin_level');
+  return obj.tags('name') && (obj.tags('boundary') == 'administrative' || obj.tags('boundary') == 'historic' || obj.tags('boundary') == 'ceremonial');
 };
 
 /**
