@@ -1,5 +1,7 @@
 # fences-builder
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/pelias/fences-builder.svg)](https://greenkeeper.io/)
+
 This module extracts administrative boundary polygons from openstreetmap data files.
 It's currently using [node-osmium](https://github.com/osmcode/node-osmium) to do most of the work, and simply filtering
 the generated polygons using tags.
